@@ -1,0 +1,55 @@
+# Livecoding Today
+
+Welcome.
+
+We're writing a Discord bot to
+update status from my FreeCodeCamp
+profile into the #detroit-FreeCodeCamp
+channel.
+
+Whoa, acoustic guitar sound effects!
+
+We'll continue as far as we can,
+without versioning our code. The review
+is good for building character :)
+
+New laptop, y'know...
+XCode tools installed!
+I managed to install Python packages without
+knowing my root password? Okay... :shrug:
+
+## Parts
+1) Write an empty Discord Python bot that just says hello in channel
+2) Download FreeCodeCamp challenge names, save to Redis
+3) Call the FCC API to download our profile
+...
+more to come in the future!
+
+# Part 1: Write an empty Discord bot
+
+We're waiting for XCode to finish installing.
+
+# Part 2: FCC Challenge names
+
+We saved this in a file called challenge-names.json
+from the API endpoint:
+
+https://www.freecodecamp.org/page-data/sq/d/4195245674.json
+
+We have no way of knowing this except Web Inspector.
+It's not documented anywhere AFAIK.
+
+# Part 3: FCC Profile 
+
+We are getting this from
+https://api.freecodecamp.org/api/users/get-public-profile?username=paulpham
+
+You can substitute your own username instead of "paulpham"
+
+We saved this in a file called `profile-paulpham.json`
+
+
+
+We're ending in one hour instead of
+in two hours, as the cafe I'm in
+is closing :/
