@@ -37,13 +37,21 @@ async def on_member_join(member):
     await member.dm_channel.send(
         f'Hi {member.name}, welcome to Arcology Builders and the Detroit FreeCodeCamp Meetup'
     )
+    await member.dm_channel.send(
+        f'You look good in the color {member.color}'
+    )
 
 @client.event
 async def on_message(message):
     if message.author == client.user:
         return
 
-    await message.channel.send('I am the One.')    
+    if message.content.startswith('$who'):
+        await message.channel.send('I am the One.')
+    else:
+        await message.channel.send(
+            'Why do you want to know: "' + message.content + '" ?'
+            )
 
     if message.content.startswith('$hello'):
         await message.channel.send('Hello!')
