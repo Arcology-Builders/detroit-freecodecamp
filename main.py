@@ -18,6 +18,7 @@ profile = json.loads(response.text)
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
 
+    my_guild = None
     for guild in client.guilds:
         if guild.name == GUILD:
             my_guild = guild
