@@ -41,13 +41,28 @@ async def on_member_join(member):
         f'You look good in the color {member.color}'
     )
 
+import serial
+
 @client.event
 async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith('$who'):
+    if message.content.startswith('who'):
         await message.channel.send('I am the One.')
+    elif message.content.startswith('omnibot'):
+        ser = serial.Serial('/dev/ttyACM0')  # open serial port
+        print(ser.name)         # check which port was really used
+        reply = ""
+        try:
+            cmd = message.content.split(' ')[1]
+            ser.write(bytes(cmd))
+            reply = "Sent " + cmd
+        except ValueError as e:
+            reply = "Error " + str(e) + ". Try 'omnibot <{f,b,l,r,p,q}#>'"
+
+        ser.close()             # close port
+        await message.channel.send(reply)
     else:
         await message.channel.send(
             'Why do you want to know: "' + message.content + '" ?'

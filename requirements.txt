@@ -1,3 +1,4 @@
-discord
-requests
-dotenv
+discord==1.7.3
+requests==2.27.0
+python-dotenv==0.19.2
+pyserial==3.4
