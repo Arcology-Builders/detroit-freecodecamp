@@ -11,6 +11,9 @@ dotenv.load_dotenv()
 GUILD = os.getenv('DISCORD_GUILD')
 my_guild = None
 
+import serial
+ser = serial.Serial('/dev/ttyACM0')  # open serial port
+
 response = requests.get('https://api.freecodecamp.org/api/users/get-public-profile?username=paulpham')
 profile = json.loads(response.text)
 
@@ -42,7 +45,7 @@ async def on_member_join(member):
         f'You look good in the color {member.color}'
     )
 
-import serial
+import time
 
 @client.event
 async def on_message(message):
@@ -52,17 +55,22 @@ async def on_message(message):
     if message.content.startswith('who'):
         await message.channel.send('I am the One.')
     elif message.content.startswith('omnibot'):
-        ser = serial.Serial('/dev/ttyACM0')  # open serial port
         print(ser.name)         # check which port was really used
         reply = ""
         try:
             cmd = message.content.split(' ')[1]
-            ser.write(bytes(cmd))
+            #ser.write('y'.encode())
+            #time.sleep(1)
+            #ser.write('o'.encode())
+            #time.sleep(1)
+            ser.write(cmd.encode())
+            #time.sleep(1)
+            #ser.write('n'.encode())
+            #time.sleep(1)
             reply = "Sent " + cmd
-        except ValueError as e:
+        except TypeError as e:
             reply = "Error " + str(e) + ". Try 'omnibot <{f,b,l,r,p,q}#>'"
 
-        ser.close()             # close port
         await message.channel.send(reply)
     else:
         await message.channel.send(
