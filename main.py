@@ -11,8 +11,8 @@ dotenv.load_dotenv()
 GUILD = os.getenv('DISCORD_GUILD')
 my_guild = None
 
-import serial
-ser = serial.Serial('/dev/ttyACM0')  # open serial port
+import redis
+r = redis.Redis(host='localhost', port=6379, db=0)
 
 response = requests.get('https://api.freecodecamp.org/api/users/get-public-profile?username=paulpham')
 profile = json.loads(response.text)
