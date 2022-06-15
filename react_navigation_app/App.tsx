@@ -1,45 +1,56 @@
 import * as React from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { useState } from 'react';
+import { Text, View, Button } from 'react-native';
+
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-//import { createStackNavigator } from '@react-navigation/stack';
-
-const RootStack = createNativeStackNavigator<RootStackParamList>();
-
-type RootStackParamList = {
-  Home: undefined;
-  Settings: undefined;
-};
-
-function HomeScreen() {
+function Feed() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Home!</Text>
+      <Text>Feed!</Text>
     </View>
   );
 }
 
-function MapScreen() {
+function Profile() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Map!</Text>
+      <Text>Profile!</Text>
     </View>
   );
 }
 
-function SettingsScreen(changeGlobalColor: Function) {
+function Notifications() {
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+      <Text>Notifications!</Text>
+    </View>
+  );
+}
+
+const getRandomColorHex = () => {
+  const red = Math.round(Math.random() * 255).toString(16).toUpperCase();
+  const green = Math.round(Math.random() * 255).toString(16).toUpperCase();
+  const blue = Math.round(Math.random() * 255).toString(16).toUpperCase();
+  return "#" + red + green + blue;
+}
+
+function SettingsScreen(setGlobalColor: any) {
+  const initialColor = getRandomColorHex();
+  console.log(initialColor);
+  return (
+    <View style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
+      }}>
       <Button
+        color={initialColor}
         onPress={() => {
-          const red = Math.round(Math.random() * 255).toString(16).toUpperCase;
-          const green = Math.round(Math.random() * 255).toString(16).toUpperCase;
-          const blue = Math.round(Math.random() * 255).toString(16).toUpperCase;
-          const hexColorCode = "#" + red + green + blue;
-          changeGlobalColor(hexColorCode);
+          const randomColor = getRandomColorHex();
+          setGlobalColor(randomColor);
         }}
         title="Randomize Text Color"
       ></Button>
@@ -48,36 +59,66 @@ function SettingsScreen(changeGlobalColor: Function) {
   );
 }
 
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
-export default function App() {
+function MyTabs() {
+  const [globalColor, setGlobalColor] = useState("#e91e63");
+
   return (
-    <View>
-      <View style={styles.container}>
-        <Text style={styles.bigBlue}>Hello Damien and Paul!</Text>
-        <StatusBar style="auto" />
-      </View>
-      <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen name="Home Name" component={HomeScreen} />
-          <Tab.Screen name="Maps Name" component={MapScreen} />          
-          <Tab.Screen name="Settings Name" component={SettingsScreen} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </View>
+    <Tab.Navigator
+      initialRouteName="Feed"
+      activeColor={globalColor}
+      labelStyle={{ fontSize: 12 }}
+      style={{ backgroundColor: 'tomato' }}
+    >
+      <Tab.Screen
+        name="Feed"
+        component={Feed}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="home" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Notifications"
+        component={Notifications}
+        options={{
+          tabBarLabel: 'Updates',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="bell" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Settings"
+        component={() => <SettingsScreen {...setGlobalColor} />}
+        options={{
+          tabBarLabel: 'Settings',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="cog-outline" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="account" color={color} size={26} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  bigBlue: {
-    color: 'blue',
-    fontWeight: 'bold',
-    fontSize: 130,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  return (
+    <NavigationContainer>
+      <MyTabs />
+    </NavigationContainer>
+  );
+}
