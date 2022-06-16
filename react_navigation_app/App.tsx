@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { Text, View, Button } from 'react-native';
+import { Text, View, Button, StyleSheet } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
@@ -22,14 +22,6 @@ function Profile() {
   );
 }
 
-function Notifications() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Notifications!</Text>
-    </View>
-  );
-}
-
 const toPaddedHex = (x: number) => x.toString(16).padStart(2, '0').toUpperCase()
 
 const getRandomColorHex = () => {
@@ -37,6 +29,37 @@ const getRandomColorHex = () => {
   const green = toPaddedHex(Math.round(Math.random() * 255));
   const blue = toPaddedHex(Math.round(Math.random() * 255));
   return "#" + red + green + blue;
+}
+
+import MapboxGL from "@react-native-mapbox-gl/maps";
+
+MapboxGL.setAccessToken("pk.eyJ1IjoicGF1bHBoYW0iLCJhIjoiY2wxYTE4Nm83MDJ4MDNibzVvcGVrenJ0ZiJ9.QeVxgVkt8SWMfpM8JC8Xvg");
+
+const mapStyles = StyleSheet.create({
+  page: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F5FCFF"
+  },
+  container: {
+    height: 300,
+    width: 300,
+    backgroundColor: "tomato"
+  },
+  map: {
+    flex: 1
+  }
+});
+
+function MapScreen() {
+  return (
+    <View style={mapStyles.page}>
+      <View style={mapStyles.container}>
+        <MapboxGL.MapView style={mapStyles.map} />
+      </View>
+    </View>
+  );
 }
 
 type SettingsScreenProps = {
@@ -88,12 +111,12 @@ function MyTabs() {
         }}
       />
       <Tab.Screen
-        name="Notifications"
-        component={Notifications}
+        name="Maps"
+        component={MapScreen}
         options={{
-          tabBarLabel: 'Updates',
+          tabBarLabel: 'Maps',
           tabBarIcon: ({ color }) => (
-            <MaterialCommunityIcons name="bell" color={color} size={26} />
+            <MaterialCommunityIcons name="map-marker" color={color} size={26} />
           ),
         }}
       />
