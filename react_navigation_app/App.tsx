@@ -30,14 +30,20 @@ function Notifications() {
   );
 }
 
+const toPaddedHex = (x: number) => x.toString(16).padStart(2, '0').toUpperCase()
+
 const getRandomColorHex = () => {
-  const red = Math.round(Math.random() * 255).toString(16).toUpperCase();
-  const green = Math.round(Math.random() * 255).toString(16).toUpperCase();
-  const blue = Math.round(Math.random() * 255).toString(16).toUpperCase();
+  const red = toPaddedHex(Math.round(Math.random() * 255));
+  const green = toPaddedHex(Math.round(Math.random() * 255));
+  const blue = toPaddedHex(Math.round(Math.random() * 255));
   return "#" + red + green + blue;
 }
 
-function SettingsScreen(setGlobalColor: any) {
+type SettingsScreenProps = {
+  setGlobalColor: Function
+}
+
+function SettingsScreen(props: SettingsScreenProps) {
   const initialColor = getRandomColorHex();
   console.log(initialColor);
   return (
@@ -50,7 +56,7 @@ function SettingsScreen(setGlobalColor: any) {
         color={initialColor}
         onPress={() => {
           const randomColor = getRandomColorHex();
-          setGlobalColor(randomColor);
+          props.setGlobalColor(randomColor);
         }}
         title="Randomize Text Color"
       ></Button>
@@ -93,7 +99,7 @@ function MyTabs() {
       />
       <Tab.Screen
         name="Settings"
-        component={() => <SettingsScreen {...setGlobalColor} />}
+        component={() => <SettingsScreen setGlobalColor={setGlobalColor} />}
         options={{
           tabBarLabel: 'Settings',
           tabBarIcon: ({ color }) => (
