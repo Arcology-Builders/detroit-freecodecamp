@@ -11,20 +11,13 @@ const ACCESS_TOKEN = 'pk.eyJ1IjoiaGFubmFob3R0ZXIiLCJhIjoiY2t1b29sNzlnNGRkMDJwcTY
 const randomLongitude = Math.round(Math.random() * 180 * 2, 4) - 180;
 const randomLatitude = Math.round(Math.random() * 85.0511 * 2, 4) - 85.0511;
 
-const fileReaderInstance = new FileReader();
-fetch(`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${randomLongitude},${randomLatitude},4,0,0/1200x600/?access_token=${ACCESS_TOKEN}`, {
-  method: 'GET',
-  redirect: 'follow',
-}).then((val1, val2) => {
-  fileReaderInstance.readAsDataURL(val1.blob()); 
-  fileReaderInstance.onload = () => {
-    base64data = fileReaderInstance.result;                
-    console.log(base64data);
-}
-}
-)
+// Lat/long for Bead Museum, to 4 places
+const lon =-831088;
+const lat =423562;
 
-import React from 'react';
+const fileReaderInstance = new FileReader();
+
+import React, { useState, useEffect } from 'react';
 import type {Node} from 'react';
 import {
   SafeAreaView,
@@ -34,6 +27,8 @@ import {
   Text,
   useColorScheme,
   View,
+  Image,
+  FlatList,
 } from 'react-native';
 
 import {
@@ -70,16 +65,60 @@ const Section = ({children, title}): Node => {
   );
 };
 
+function setImageBlob(lonNum, latNum) {
+  const lon = (lonNum / 10000).toString();
+  const lat = (latNum / 10000).toString();
+  console.log(lon, lat);
+  return fetch(`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${lon},${lat},19,0,0/1200x600/?access_token=${ACCESS_TOKEN}`, {
+    method: 'GET',
+    redirect: 'follow',
+  }).then((response) => {
+    return response.blob();
+  }).then((response) => {
+    return URL.createObjectURL(response);
+  })
+
+}
+
+function renderItem({ item }) {
+  let imageUri = "data:image/png;base64," + item;
+  return <Image source={{uri: imageUri, scale: 1}} style={{ height: 100 }} />
+}
+
+const imageArray = new Array(11).fill().map((_, i) => setImageBlob(lon+(i*10), lat, ));
+
 const App: () => Node = () => {
   const isDarkMode = useColorScheme() === 'dark';
+
+  //const [images, setImages] = useState([]);
+  const [image, setImage] = useState<string>('');
+
+  const getData = async () => {
+    fetch(`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${randomLongitude},${randomLatitude},4,0,0/1200x600/?access_token=${ACCESS_TOKEN}`, {
+      method: 'GET',
+      redirect: 'follow',
+    }).then((response) => {
+      return response.blob();
+    }).then((response) => {
+      setImage(URL.createObjectURL(response));
+    }).catch((err) => console.error(err));  
+  }
+
+
+  //Promise.all(imageArray).then(results => setImages(results));
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      { /*       <FlatList data={images} renderItem={renderItem} /> */ }
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
@@ -88,6 +127,7 @@ const App: () => Node = () => {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
+          <Image source={{uri: image}} style={{width: 200, height: 200}} />
           <Section title="Step One">
             Edit <Text style={styles.highlight}>App.js</Text> to change this
             screen and then come back to see your edits.
