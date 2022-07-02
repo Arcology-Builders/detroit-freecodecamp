@@ -82,7 +82,8 @@ function setImageBlob(lonNum, latNum) {
 
 function renderItem({ item }) {
   let imageUri = "data:image/png;base64," + item;
-  return <Image source={{uri: imageUri, scale: 1}} style={{ height: 100 }} />
+  console.log(imageUri);
+  return <Image source={{uri: item}} style={{ height: 100 }} />
 }
 
 const imageArray = new Array(11).fill().map((_, i) => setImageBlob(lon+(i*10), lat, ));
@@ -92,6 +93,7 @@ const App: () => Node = () => {
 
   //const [images, setImages] = useState([]);
   const [image, setImage] = useState<string>('');
+  const [images, setImages] = useState<Array<string>>([]);
 
   const getData = async () => {
     fetch(`https://api.mapbox.com/styles/v1/mapbox/streets-v11/static/${randomLongitude},${randomLatitude},4,0,0/1200x600/?access_token=${ACCESS_TOKEN}`, {
@@ -105,7 +107,6 @@ const App: () => Node = () => {
   }
 
 
-  //Promise.all(imageArray).then(results => setImages(results));
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -113,12 +114,16 @@ const App: () => Node = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+    Promise.all(imageArray).then(results => {
+      console.log("type", typeof(results));
+      setImages(results)
+    });
+}, []);
 
   return (
     <SafeAreaView style={backgroundStyle}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      { /*       <FlatList data={images} renderItem={renderItem} /> */ }
+      <FlatList data={images} renderItem={renderItem} />
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
