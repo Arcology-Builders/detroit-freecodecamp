@@ -1,0 +1,18 @@
+{
+  "name": "relay-example",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Paul Pham",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.1",
+    "express-graphql": "^0.12.0",
+    "express-graphql-persisted-queries": "^0.1.2",
+    "graphql": "^16.5.0",
+    "graphql-relay": "^0.10.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-relay": "^14.1.0",
+    "relay-runtime": "^14.1.0"
+  }
+}
