@@ -1,0 +1,17 @@
+{
+  "name": "notebooks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "help": "dataflow --help",
+    "ridgeline": "dataflow run ridgeline.ojs --allow-file-attachments",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@alex.garcia/dataflow": "^0.0.11"
+  }
+}

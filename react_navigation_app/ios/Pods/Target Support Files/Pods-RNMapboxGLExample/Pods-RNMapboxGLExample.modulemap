@@ -1,6 +1,0 @@
-module Pods_RNMapboxGLExample {
-  umbrella header "Pods-RNMapboxGLExample-umbrella.h"
-
-  export *
-  module * { export * }
-}
